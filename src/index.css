@@ -397,6 +397,68 @@ main {
   padding: 56px 0;
 }
 
+.trust-strip {
+  margin: 28px 0 8px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(300px, 1.2fr);
+  gap: 12px;
+  align-items: stretch;
+  background: linear-gradient(135deg, #ffffff, #f5fbff);
+  box-shadow: 0 12px 34px rgba(16, 36, 90, 0.06);
+}
+
+.trust-strip article,
+.trust-badges span {
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.trust-strip article {
+  min-height: 86px;
+  padding: 14px;
+  display: grid;
+  align-content: center;
+}
+
+.trust-strip strong,
+.trust-strip span {
+  display: block;
+}
+
+.trust-strip strong {
+  color: var(--navy);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.trust-strip article span {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.trust-badges {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.trust-badges span {
+  min-height: 39px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  color: #057d75;
+  background: #e9fbf8;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
 .section-heading {
   display: flex;
   justify-content: space-between;
@@ -442,6 +504,51 @@ main {
 .tab-row button.active {
   color: #067b74;
   background: #e9fbf8;
+}
+
+.roadmap-section {
+  padding-top: 38px;
+}
+
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.roadmap-grid article {
+  min-height: 226px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  display: grid;
+  align-content: start;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(16, 36, 90, 0.07);
+}
+
+.roadmap-grid span {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: var(--blue);
+  font-weight: 900;
+}
+
+.roadmap-grid strong {
+  margin-top: 18px;
+  color: var(--navy);
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+.roadmap-grid p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .featured-treatment-section {
@@ -703,51 +810,171 @@ main {
 .doctors-section.carousel-mode .doctor-grid {
   grid-template-columns: none;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(260px, 320px);
+  grid-auto-columns: minmax(430px, 31.5%);
   overflow-x: auto;
-  padding: 2px 2px 18px;
+  overflow-y: hidden;
+  padding: 2px 24px 10px 2px;
   scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: #b8c5d9 transparent;
+}
+
+.doctors-section.carousel-mode {
+  overflow: hidden;
+  padding-bottom: 30px;
 }
 
 .doctors-section.carousel-mode .doctor-card {
   scroll-snap-align: start;
+  min-height: 250px;
 }
 
 .doctor-card {
-  padding: 18px;
+  padding: 16px;
   display: grid;
-  grid-template-columns: 110px 1fr;
+  grid-template-columns: 132px minmax(0, 1fr);
   gap: 16px;
-  align-items: center;
+  align-items: stretch;
   color: inherit;
-  border-radius: 16px;
+  border-radius: 18px;
 }
 
-.doctor-card img {
-  width: 110px;
-  height: 130px;
-  border-radius: 16px;
+.doctor-photo-wrap {
+  position: relative;
+  min-height: 100%;
+}
+
+.doctor-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  min-height: 214px;
+  border-radius: 15px;
   object-fit: cover;
+  display: block;
+}
+
+.doctor-photo-wrap span {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  min-width: 32px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: rgba(16, 36, 90, 0.88);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.doctor-card-body {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+}
+
+.doctor-card-top strong {
+  font-size: 1rem;
+  line-height: 1.18;
+}
+
+.doctor-card-top p {
+  margin-top: 5px;
+  min-height: auto;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.doctor-meta-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.doctor-meta-row span {
+  min-width: 0;
+  min-height: 28px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  background: var(--soft);
+  font-size: 0.72rem;
+  line-height: 1.15;
+  white-space: normal;
+  width: max-content;
+  max-width: 100%;
+}
+
+.doctor-meta-row b,
+.doctor-card-footer em b {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  color: #ffffff;
+  background: var(--blue);
+  font-size: 0.62rem;
+  flex: 0 0 auto;
 }
 
 .doctor-card em {
-  margin-top: 8px;
   color: #057d75;
   font-style: normal;
 }
 
+.doctor-hospital-name {
+  margin-top: 6px;
+  display: -webkit-box;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.3;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.doctor-card-footer {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.doctor-card-footer em {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #057d75;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
 .doctor-card small {
   width: max-content;
-  min-height: 30px;
-  margin-top: 10px;
-  padding: 0 11px;
+  min-height: 32px;
+  margin-top: 0;
+  padding: 0 12px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
+  gap: 6px;
   color: #ffffff;
   background: var(--blue);
   font-size: 0.74rem;
   font-weight: 900;
+}
+
+.doctor-card small i {
+  font-style: normal;
 }
 
 .detail-page {
@@ -755,6 +982,7 @@ main {
   gap: 24px;
   width: min(1280px, 100%);
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .profile-page {
@@ -1475,7 +1703,7 @@ main {
 }
 
 .treatment-care-grid {
-  grid-template-columns: minmax(260px, 0.85fr) minmax(360px, 1.05fr) minmax(420px, 1.2fr);
+  grid-template-columns: minmax(260px, 0.75fr) minmax(360px, 1fr) minmax(360px, 1fr);
   align-items: start;
 }
 
@@ -1588,17 +1816,18 @@ main {
 }
 
 .detail-panel {
-  padding: 20px;
+  padding: 18px;
   border: 1px solid var(--line);
-  border-radius: 22px;
+  border-radius: 18px;
   background: #ffffff;
-  box-shadow: 0 16px 44px rgba(16, 36, 90, 0.07);
+  box-shadow: 0 12px 34px rgba(16, 36, 90, 0.06);
 }
 
 .detail-panel h2 {
-  margin: 0 0 16px;
+  margin: 0 0 14px;
   color: var(--navy);
-  font-size: 1.4rem;
+  font-size: 1.08rem;
+  line-height: 1.2;
 }
 
 .detail-panel p,
@@ -1611,32 +1840,33 @@ main {
 .included-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 8px;
 }
 
 .included-grid span,
 .cost-table span {
-  min-height: 48px;
-  padding: 0 14px;
-  border-radius: 14px;
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   background: var(--soft);
   color: var(--ink);
+  font-size: 0.82rem;
   font-weight: 900;
 }
 
 .treatment-detail-media {
   display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 16px;
+  grid-template-columns: 150px 1fr;
+  gap: 14px;
   align-items: center;
 }
 
 .treatment-detail-media img {
   width: 100%;
-  height: 150px;
-  border-radius: 18px;
+  height: 132px;
+  border-radius: 14px;
   object-fit: cover;
 }
 
@@ -1650,22 +1880,28 @@ main {
 
 .treatment-detail-media p {
   margin-bottom: 0;
+  line-height: 1.55;
 }
 
 .mini-list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
+  max-height: 292px;
+  overflow-y: auto;
+  padding-right: 3px;
+  scrollbar-width: thin;
+  scrollbar-color: #b8c5d9 transparent;
 }
 
 .mini-list button {
   width: 100%;
-  min-height: 78px;
+  min-height: 74px;
   padding: 8px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 14px;
   display: grid;
-  grid-template-columns: 86px 1fr;
-  gap: 12px;
+  grid-template-columns: 82px 1fr;
+  gap: 10px;
   align-items: center;
   color: var(--ink);
   background: #ffffff;
@@ -1673,9 +1909,9 @@ main {
 }
 
 .mini-list img {
-  width: 76px;
-  height: 62px;
-  border-radius: 12px;
+  width: 72px;
+  height: 58px;
+  border-radius: 10px;
   object-fit: cover;
 }
 
@@ -1685,60 +1921,144 @@ main {
 }
 
 .mini-list small {
-  margin-top: 5px;
+  margin-top: 4px;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.35;
 }
 
 .suggestion-section {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 26px;
 }
 
 .suggestion-card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
 .suggestion-card-grid button {
-  min-height: 224px;
+  min-height: 148px;
   min-width: 0;
-  padding: 0;
+  padding: 12px;
   border: 1px solid var(--line);
-  border-radius: 20px;
-  overflow: hidden;
+  border-radius: 16px;
   display: grid;
-  align-content: start;
+  grid-template-columns: 124px minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
   text-align: left;
   color: var(--ink);
   background: #ffffff;
-  box-shadow: 0 12px 28px rgba(16, 36, 90, 0.06);
+  box-shadow: 0 10px 24px rgba(16, 36, 90, 0.055);
+   width: 100%;
 }
 
-.suggestion-card-grid img {
+.suggestion-card-grid button:hover {
+  border-color: rgba(49, 87, 213, 0.34);
+  transform: translateY(-1px);
+}
+
+.suggestion-media {
+  position: relative;
+  min-height: 124px;
+}
+
+.suggestion-media img {
   width: 100%;
-  height: 116px;
+  height: 100%;
+  min-height: 124px;
+  border-radius: 12px;
   object-fit: cover;
   display: block;
 }
 
-.suggestion-card-grid strong,
-.suggestion-card-grid span,
-.suggestion-card-grid em,
-.suggestion-card-grid .star-rating {
-  margin: 10px 14px 0;
+.suggestion-media span {
+  position: absolute;
+  left: 7px;
+  top: 7px;
+  min-width: 28px;
+  height: 26px;
+  padding: 0 7px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: rgba(16, 36, 90, 0.88);
+  font-size: 0.66rem;
+  font-weight: 900;
+}
+
+.suggestion-body {
   min-width: 0;
+  display: grid;
+  align-content: space-between;
+  gap: 9px;
+}
+
+.suggestion-body strong,
+.suggestion-body span,
+.suggestion-body em,
+.suggestion-body .star-rating {
+  min-width: 0;
+  margin: 0;
   white-space: normal;
   overflow-wrap: anywhere;
   line-height: 1.25;
 }
 
+.suggestion-body strong {
+  display: -webkit-box;
+  color: var(--ink);
+  font-size: 1rem;
+  overflow-wrap: normal;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.suggestion-body > span {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+  min-width: 0;
+}
+
+.suggestion-body > span:not(.star-rating) {
+  overflow: hidden;
+}
+
+.suggestion-body > span b {
+  min-width: 30px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  color: #057d75;
+  background: #e9fbf8;
+  font-size: 0.58rem;
+  flex: 0 0 auto;
+}
+
+.suggestion-meta {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
 .suggestion-card-grid em {
   color: var(--orange);
   font-style: normal;
+  font-size: 0.88rem;
   font-weight: 900;
+  white-space: nowrap;
 }
 
 .hospital-detail-hero {
@@ -2138,6 +2458,90 @@ main {
 
 .why-section article {
   padding: 22px;
+}
+
+.support-section {
+  margin: 10px 0 50px;
+  padding: clamp(26px, 4vw, 44px);
+  border: 1px solid rgba(18, 184, 170, 0.22);
+  border-radius: 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(320px, 0.75fr);
+  gap: 18px;
+  align-items: stretch;
+  background: linear-gradient(135deg, #f4fffd, #ffffff);
+  box-shadow: 0 18px 50px rgba(16, 36, 90, 0.07);
+}
+
+.support-intro {
+  min-width: 0;
+}
+
+.support-intro span {
+  color: var(--teal);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.support-intro h2 {
+  max-width: 720px;
+  margin: 12px 0 0;
+  color: var(--navy);
+  font-size: clamp(2rem, 3.5vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.support-intro p {
+  max-width: 680px;
+  margin: 18px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.support-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.support-panel span {
+  min-height: 48px;
+  padding: 0 13px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  color: var(--ink);
+  background: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 900;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.country-support-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.country-support-grid article {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.country-support-grid strong {
+  display: block;
+  color: var(--navy);
+}
+
+.country-support-grid p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .comparison-section,
@@ -2611,6 +3015,8 @@ main {
   .cost-transparency-section,
   .treatment-content-grid,
   .budget-explain-grid,
+  .trust-strip,
+  .support-section,
   .detail-layout,
   .hospital-info-grid,
   .doctor-detail-grid,
@@ -2635,12 +3041,27 @@ main {
   .destination-grid,
   .hospital-grid,
   .doctor-grid,
+  .roadmap-grid,
+  .country-support-grid,
   .why-section {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .trust-badges,
+  .support-panel {
+    grid-column: 1 / -1;
+  }
+
   .featured-carousel {
     grid-auto-columns: minmax(310px, 52%);
+  }
+
+  .doctors-section.carousel-mode .doctor-grid {
+    grid-auto-columns: minmax(400px, 48%);
+  }
+
+  .suggestion-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .footer {
@@ -2697,6 +3118,12 @@ main {
   .treatment-command-bar,
   .cost-transparency-section,
   .budget-explain-grid,
+  .trust-strip,
+  .trust-badges,
+  .roadmap-grid,
+  .support-section,
+  .support-panel,
+  .country-support-grid,
   .full-budget-section,
   .full-budget-section .budget-customizer,
   .budget-breakdown-grid,
@@ -2710,6 +3137,32 @@ main {
 
   .featured-carousel {
     grid-auto-columns: minmax(280px, 92%);
+  }
+
+  .doctors-section.carousel-mode .doctor-grid {
+    grid-auto-columns: minmax(320px, 92%);
+  }
+
+  .doctor-card {
+    grid-template-columns: 112px minmax(0, 1fr);
+  }
+
+  .doctor-photo-wrap img {
+    min-height: 206px;
+  }
+
+  .suggestion-card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .suggestion-card-grid button {
+    grid-template-columns: 108px minmax(0, 1fr);
+    min-height: 132px;
+  }
+
+  .suggestion-media,
+  .suggestion-media img {
+    min-height: 108px;
   }
 
   main {

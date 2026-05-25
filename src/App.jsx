@@ -444,6 +444,38 @@ const WHY_US = [
   ['Doctor confidence', 'Compare specialty, experience, consultation fee, and hospital association.'],
 ];
 
+const TRUST_METRICS = [
+  ['100k+', 'patient journeys benchmarked'],
+  ['38+', 'destination countries tracked'],
+  ['1,500+', 'hospital partners mapped'],
+  ['48h', 'medical opinion target'],
+];
+
+const JOURNEY_FLOW = [
+  ['01', 'Share reports', 'Upload case notes and tell us your preferred destination, budget, and travel timeline.'],
+  ['02', 'Get opinion and estimate', 'Receive doctor opinion, hospital package, stay, visa, and travel assumptions in one view.'],
+  ['03', 'Plan arrival', 'Coordinate visa letter, flights, airport pickup, interpreter, hotel, and admission timing.'],
+  ['04', 'Recover and follow up', 'Track discharge support, pharmacy help, follow-up consults, and return travel planning.'],
+];
+
+const FREE_SUPPORT = [
+  'Medical opinion and cost estimate',
+  'Pre-travel consultation',
+  'Medical visa invitation letter',
+  'Airport pickup and local transport',
+  'Hotel or guest house near hospital',
+  'Interpreter and translator support',
+  'SIM, money exchange, and local guidance',
+  'Follow-up care coordination',
+];
+
+const COUNTRY_SUPPORT = [
+  ['Middle East', 'Arabic support, visa help, family stay planning'],
+  ['Africa', 'Case manager guidance, airport pickup, cost clarity'],
+  ['CIS', 'Russian language support and specialist matching'],
+  ['SAARC', 'Fast hospital quotes and affordable travel planning'],
+];
+
 const CURRENCIES = {
   USD: { code: 'USD', rate: 1 },
   INR: { code: 'INR', rate: 83 },
@@ -874,14 +906,25 @@ function Doctors({ hospitals, isCarousel = false, money, setPage, setSelectedHos
             }}
             type="button"
           >
-            <img alt={hospital.doctor} src={hospital.doctorImage} />
-            <div>
-              <strong>{hospital.doctor}</strong>
-              <p>{hospital.doctorTitle}</p>
+            <div className="doctor-photo-wrap">
+              <img alt={hospital.doctor} src={hospital.doctorImage} />
+              <span>MD</span>
+            </div>
+            <div className="doctor-card-body">
+              <div className="doctor-card-top">
+                <strong>{hospital.doctor}</strong>
+                <p>{hospital.doctorTitle}</p>
+              </div>
+              <div className="doctor-meta-row">
+                <span><b>YR</b>{hospital.experience}</span>
+                <span><b>H</b>{hospital.city}</span>
+              </div>
               <StarRating rating={hospital.rating} />
-              <span>{hospital.experience} - {hospital.name}</span>
-              <em>{money(hospital.doctorFee)} consult</em>
-              <small>View profile</small>
+              <span className="doctor-hospital-name">{hospital.name}</span>
+              <div className="doctor-card-footer">
+                <em><b>$</b>{money(hospital.doctorFee)} consult</em>
+                <small>View profile <i>{'->'}</i></small>
+              </div>
             </div>
           </button>
         ))}
@@ -1028,13 +1071,20 @@ function TreatmentDetail({ hospitals, money, selectedTreatment, setPage, setSele
                   setSelectedHospital(hospital);
                   setPage('hospital-detail');
                 }}
-                type="button"
-              >
-                <img alt="" src={hospital.image} />
-                <strong>{hospital.name}</strong>
-                <span>{hospital.city}, {hospital.country}</span>
-                <StarRating rating={hospital.rating} />
-                <em>Total estimate {money(totalCost(hospital, selectedTreatment))}</em>
+              type="button"
+            >
+                <div className="suggestion-media">
+                  <img alt="" src={hospital.image} />
+                  <span>H</span>
+                </div>
+                <div className="suggestion-body">
+                  <strong>{hospital.name}</strong>
+                  <span><b>LOC</b>{hospital.city}, {hospital.country}</span>
+                  <div className="suggestion-meta">
+                    <StarRating rating={hospital.rating} />
+                    <em>{money(totalCost(hospital, selectedTreatment))}</em>
+                  </div>
+                </div>
               </button>
             ))}
           </div>
@@ -1049,13 +1099,20 @@ function TreatmentDetail({ hospitals, money, selectedTreatment, setPage, setSele
                   setSelectedHospital(hospital);
                   setPage('doctor-detail');
                 }}
-                type="button"
-              >
-                <img alt="" src={hospital.doctorImage} />
-                <strong>{hospital.doctor}</strong>
-                <span>{hospital.doctorTitle}</span>
-                <StarRating rating={hospital.rating} />
-                <em>{money(hospital.doctorFee)} consult</em>
+              type="button"
+            >
+                <div className="suggestion-media">
+                  <img alt="" src={hospital.doctorImage} />
+                  <span>DR</span>
+                </div>
+                <div className="suggestion-body">
+                  <strong>{hospital.doctor}</strong>
+                  <span><b>SP</b>{hospital.doctorTitle}</span>
+                  <div className="suggestion-meta">
+                    <StarRating rating={hospital.rating} />
+                    <em>{money(hospital.doctorFee)} consult</em>
+                  </div>
+                </div>
               </button>
             ))}
           </div>
@@ -1555,6 +1612,74 @@ function HomeReviews() {
   );
 }
 
+function TrustStrip() {
+  return (
+    <section className="trust-strip" aria-label="Trust and accreditation highlights">
+      {TRUST_METRICS.map(([metric, label]) => (
+        <article key={metric}>
+          <strong>{metric}</strong>
+          <span>{label}</span>
+        </article>
+      ))}
+      <div className="trust-badges">
+        {['ISO process', 'NABH/JCI network', 'IATA travel desk', 'Google review ready'].map((item) => (
+          <span key={item}>{item}</span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function JourneyRoadmap() {
+  return (
+    <section className="page-section roadmap-section">
+      <div className="section-heading">
+        <div>
+          <h2>How the medical journey works</h2>
+          <p>From reports to recovery, patients see every step before they commit to a hospital.</p>
+        </div>
+      </div>
+      <div className="roadmap-grid">
+        {JOURNEY_FLOW.map(([number, title, body]) => (
+          <article key={number}>
+            <span>{number}</span>
+            <strong>{title}</strong>
+            <p>{body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FreeSupportSection() {
+  return (
+    <section className="support-section">
+      <div className="support-intro">
+        <span>No service charge</span>
+        <h2>Support patients expect before flying abroad</h2>
+        <p>
+          Make the full promise visible before the first call: estimate, visa, travel, language,
+          local logistics, and follow-up are part of the plan.
+        </p>
+      </div>
+      <div className="support-panel">
+        {FREE_SUPPORT.map((item) => (
+          <span key={item}>{item}</span>
+        ))}
+      </div>
+      <div className="country-support-grid">
+        {COUNTRY_SUPPORT.map(([region, detail]) => (
+          <article key={region}>
+            <strong>{region}</strong>
+            <p>{detail}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function AuthPage() {
   const [mode, setMode] = useState('login');
   const [role, setRole] = useState('Patient');
@@ -1754,7 +1879,9 @@ function App() {
         />
       )}
       <main>
+        {showHome && <TrustStrip />}
         {showHome && <FeaturedTreatments money={money} setPage={setPage} setSelectedTreatment={setSelectedTreatment} />}
+        {showHome && <JourneyRoadmap />}
         {(showHome || page === 'destinations') && <Destinations money={money} setPage={setPage} setSelectedCountry={setSelectedCountry} />}
         {(showHome || page === 'treatments') && (
           <Treatments
@@ -1792,6 +1919,7 @@ function App() {
             ))}
           </section>
         )}
+        {showHome && <FreeSupportSection />}
         {showHome && <HomeReviews />}
         {(showHome || page === 'planner') && <CostComparison money={money} selectedHospital={selectedHospital} selectedTreatment={selectedTreatment} />}
         {(showHome || page === 'planner') && <Planner money={money} selectedHospital={selectedHospital} selectedTreatment={selectedTreatment} />}
