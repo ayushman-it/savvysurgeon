@@ -248,6 +248,29 @@ const HOME_HIGHLIGHTS = [
   },
 ];
 
+const HERO_CAROUSEL_CARDS = [
+  {
+    title: 'Find care by disease',
+    body: 'Pick a concern and see matched hospitals and doctors.',
+    image: FEATURE_IMAGES[0],
+  },
+  {
+    title: 'Compare hospitals',
+    body: 'Review price, rating, doctors, and treatment focus.',
+    image: FEATURE_IMAGES[1],
+  },
+  {
+    title: 'Choose specialists',
+    body: 'Open surgeon profiles with fees and languages.',
+    image: BOOK_APPOINTMENT_DOCTOR_IMAGE,
+  },
+  {
+    title: 'Plan travel',
+    body: 'Check stay, visa, transport, and request support.',
+    image: FEATURE_IMAGES[2],
+  },
+];
+
 const BODY_PART_CATEGORIES = [
   {
     id: 'eye',
@@ -946,28 +969,16 @@ function App() {
 
               {activeScreen === 'home' && (
                 <div className="screen-view app-scroll">
-                  <section className="module-card disease-directory-card">
-                    <div className="section-heading">
-                      <h3>Disease listings</h3>
-                      <button className="mini-chip active" onClick={() => openBookingFlow()} type="button">
-                        View all
-                      </button>
-                    </div>
-                    <div className="disease-chip-grid">
-                      {BOOKING_CATEGORIES.slice(0, 8).map((category) => (
-                        <button
-                          className={selectedBookingCategoryId === category.id ? 'disease-chip active' : 'disease-chip'}
-                          key={category.id}
-                          onClick={() => {
-                            setSelectedBookingCategoryId(category.id);
-                            setSelectedAilment(category.ailments[0]);
-                            setSelectedSpecialty(BOOKING_CATEGORY_SPECIALTY[category.id] ?? 'All');
-                          }}
-                          type="button"
-                        >
-                          <span>{category.short}</span>
-                          <strong>{category.title}</strong>
-                        </button>
+                  <section className="module-card mini-hero-section">
+                    <div className="mini-hero-carousel">
+                      {HERO_CAROUSEL_CARDS.map((card) => (
+                        <article className="mini-hero-card" key={card.title}>
+                          <img alt={card.title} src={card.image} />
+                          <div>
+                            <strong>{card.title}</strong>
+                            <span>{card.body}</span>
+                          </div>
+                        </article>
                       ))}
                     </div>
                   </section>
@@ -1025,6 +1036,32 @@ function App() {
                               <span>{hospital.languages.slice(0, 2).join(', ')}</span>
                             </div>
                           </div>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section className="module-card disease-directory-card">
+                    <div className="section-heading">
+                      <h3>Disease listings</h3>
+                      <button className="mini-chip active" onClick={() => openBookingFlow()} type="button">
+                        View all
+                      </button>
+                    </div>
+                    <div className="disease-chip-grid">
+                      {BOOKING_CATEGORIES.slice(0, 8).map((category) => (
+                        <button
+                          className={selectedBookingCategoryId === category.id ? 'disease-chip active' : 'disease-chip'}
+                          key={category.id}
+                          onClick={() => {
+                            setSelectedBookingCategoryId(category.id);
+                            setSelectedAilment(category.ailments[0]);
+                            setSelectedSpecialty(BOOKING_CATEGORY_SPECIALTY[category.id] ?? 'All');
+                          }}
+                          type="button"
+                        >
+                          <span>{category.short}</span>
+                          <strong>{category.title}</strong>
                         </button>
                       ))}
                     </div>
