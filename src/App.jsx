@@ -14,6 +14,22 @@ const BUDGET_FILTERS = [
   { label: '$3k-$8k', min: 3000, max: 8000 },
   { label: '$8k+', min: 8000, max: Infinity },
 ];
+const TREATMENT_DIRECTORY = [
+  { id: 'cardiac-sciences', group: 'medical', icon: 'CS', title: 'Cardiac Sciences', specialty: 'Cardiac Surgery', packageFrom: 500, valueScore: 94 },
+  { id: 'ent', group: 'medical', icon: 'EN', title: 'ENT', specialty: 'Cardiac Surgery', packageFrom: 1000, valueScore: 91 },
+  { id: 'general-medicine', group: 'medical', icon: 'GM', title: 'General Medicine', specialty: 'Cardiac Surgery', packageFrom: 500, valueScore: 92 },
+  { id: 'orthopedics', group: 'medical', icon: 'OR', title: 'Orthopedics', specialty: 'Orthopedics', packageFrom: 2200, valueScore: 94 },
+  { id: 'spine-surgery', group: 'medical', icon: 'SP', title: 'Spine Surgery', specialty: 'Orthopedics', packageFrom: 4000, valueScore: 90 },
+  { id: 'oncology', group: 'medical', icon: 'ON', title: 'Oncology', specialty: 'Oncology', packageFrom: 600, valueScore: 90 },
+  { id: 'haematology', group: 'medical', icon: 'HB', title: 'Haematology And BMT', specialty: 'Oncology', packageFrom: 30000, valueScore: 91 },
+  { id: 'infertility', group: 'medical', icon: 'IF', title: 'Infertility', specialty: 'Oncology', packageFrom: 2000, valueScore: 94 },
+  { id: 'urology', group: 'medical', icon: 'UR', title: 'Urology', specialty: 'Orthopedics', packageFrom: 3000, valueScore: 92 },
+  { id: 'hair-transplant', group: 'aesthetic', icon: 'HT', title: 'Hair Transplant', specialty: 'Orthopedics', packageFrom: 2000, valueScore: 95 },
+  { id: 'dental', group: 'aesthetic', icon: 'DN', title: 'Dental', specialty: 'Cardiac Surgery', packageFrom: 1000, valueScore: 91 },
+  { id: 'plastic-surgery', group: 'aesthetic', icon: 'PS', title: 'Plastic Aesthetic And Reconstructive', specialty: 'Orthopedics', packageFrom: 2000, valueScore: 95 },
+  { id: 'health-wellness', group: 'wellness', icon: 'HW', title: 'Health and Wellness', specialty: 'Cardiac Surgery', packageFrom: 200, valueScore: 95 },
+  { id: 'neuro-wellness', group: 'wellness', icon: 'NW', title: 'Neuro-Wellness', specialty: 'Oncology', packageFrom: 400, valueScore: 94 },
+];
 const BRAND_NAME = 'SavvySurgeon';
 const BRAND_TAGLINE = '';
 
@@ -39,6 +55,7 @@ const HOSPITALS = [
     surgeonImage:
       'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=900&q=80',
     procedures: ['CABG', 'Valve repair', 'Angioplasty', 'Heart failure care'],
+    treatmentTags: ['Cardiac Sciences', 'ENT', 'General Medicine', 'Dental', 'Health and Wellness'],
     facilities: ['Hybrid cath lab', 'International patient lounge', 'Private ICU recovery', '24x7 care desk'],
     support: ['Visa letter support', 'Airport pickup', 'Translator on request', 'Guest stay partners'],
     certifications: ['JCI aligned workflow', 'Cardiac center of excellence', 'International patient services'],
@@ -76,6 +93,7 @@ const HOSPITALS = [
     surgeonImage:
       'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=900&q=80',
     procedures: ['Knee replacement', 'Hip replacement', 'Sports injury repair', 'Spine stabilization'],
+    treatmentTags: ['Orthopedics', 'Spine Surgery', 'Urology', 'Hair Transplant', 'Plastic Aesthetic And Reconstructive'],
     facilities: ['Robotic operating theatre', 'Dedicated rehab floor', 'Recovery suites', 'Mobility assessment desk'],
     support: ['Hotel transfer desk', 'Companion support', 'Physio pathway', 'Interpreter service'],
     certifications: ['Joint replacement excellence', 'Sports injury pathway', 'International mobility rehab'],
@@ -113,6 +131,7 @@ const HOSPITALS = [
     surgeonImage:
       'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=900&q=80',
     procedures: ['Breast oncology', 'GI oncology', 'Day care chemotherapy', 'Second opinion review'],
+    treatmentTags: ['Oncology', 'Haematology And BMT', 'Infertility', 'Neuro-Wellness'],
     facilities: ['Tumor board room', 'Private infusion suites', 'Cancer care coordination', 'Family counseling rooms'],
     support: ['Digital records intake', 'Insurance desk', 'Family counseling', 'Tele follow-up'],
     certifications: ['Oncology center accreditation', 'Multidisciplinary treatment board', 'Global second opinion desk'],
@@ -452,6 +471,14 @@ function formatCurrency(value) {
   }).format(value);
 }
 
+function getEstimatedTotal(hospital, packageFrom, nights = 6) {
+  return packageFrom + hospital.cost.flight + hospital.cost.visa + hospital.cost.local + hospital.cost.other + hospital.cost.stayNight * nights;
+}
+
+function getActivePackageFrom(hospital, treatment) {
+  return treatment && hospital.treatmentTags.includes(treatment.title) ? treatment.packageFrom : hospital.packageFrom;
+}
+
 function BrandMark({ compact = false }) {
   return (
     <span className={compact ? 'mini-mark' : 'brand-mark'}>
@@ -562,6 +589,7 @@ function App() {
   const [selectedDestination, setSelectedDestination] = useState('All destinations');
   const [selectedBudget, setSelectedBudget] = useState(BUDGET_FILTERS[0].label);
   const [selectedSupportFilter, setSelectedSupportFilter] = useState('Any support');
+  const [selectedTreatmentId, setSelectedTreatmentId] = useState('all');
   const [tripNights, setTripNights] = useState(6);
   const [withCompanion, setWithCompanion] = useState(true);
   const [requestMode, setRequestMode] = useState('Video consultation');
@@ -592,13 +620,15 @@ function App() {
     const search = query.trim().toLowerCase();
     const treatmentGroup = TREATMENT_GROUPS.find((group) => group.id === selectedTreatmentGroup) ?? TREATMENT_GROUPS[0];
     const budget = BUDGET_FILTERS.find((item) => item.label === selectedBudget) ?? BUDGET_FILTERS[0];
+    const treatment = TREATMENT_DIRECTORY.find((item) => item.id === selectedTreatmentId);
     return HOSPITALS.filter((hospital) => {
       const matchesSpecialty = selectedSpecialty === 'All' || hospital.specialty === selectedSpecialty;
-      const matchesTreatment = treatmentGroup.type === 'All' || hospital.treatmentType === treatmentGroup.type;
+      const matchesTreatment = treatment ? true : treatmentGroup.type === 'All' || hospital.treatmentType === treatmentGroup.type;
       const matchesProcedure = selectedProcedure === 'All procedures' || hospital.procedures.includes(selectedProcedure);
       const matchesDestination = selectedDestination === 'All destinations' || hospital.country === selectedDestination;
       const matchesBudget = hospital.packageFrom >= budget.min && hospital.packageFrom <= budget.max;
       const matchesSupport = selectedSupportFilter === 'Any support' || hospital.support.includes(selectedSupportFilter);
+      const matchesTreatmentCard = !treatment || hospital.treatmentTags.includes(treatment.title);
       const haystack = [
         hospital.name,
         hospital.city,
@@ -607,6 +637,7 @@ function App() {
         hospital.treatmentType,
         hospital.leadSurgeon,
         hospital.surgeonTitle,
+        ...hospital.treatmentTags,
         ...hospital.languages,
         ...hospital.certifications,
         ...hospital.procedures,
@@ -614,11 +645,15 @@ function App() {
         .join(' ')
         .toLowerCase();
 
-      return matchesSpecialty && matchesTreatment && matchesProcedure && matchesDestination && matchesBudget && matchesSupport && (!search || haystack.includes(search));
+      return matchesSpecialty && matchesTreatment && matchesProcedure && matchesDestination && matchesBudget && matchesSupport && matchesTreatmentCard && (!search || haystack.includes(search));
     });
-  }, [query, selectedBudget, selectedDestination, selectedProcedure, selectedSpecialty, selectedSupportFilter, selectedTreatmentGroup]);
+  }, [query, selectedBudget, selectedDestination, selectedProcedure, selectedSpecialty, selectedSupportFilter, selectedTreatmentGroup, selectedTreatmentId]);
 
   const selectedTreatmentMeta = TREATMENT_GROUPS.find((group) => group.id === selectedTreatmentGroup) ?? TREATMENT_GROUPS[0];
+  const selectedTreatment = TREATMENT_DIRECTORY.find((item) => item.id === selectedTreatmentId);
+  const treatmentDirectoryItems = selectedTreatmentGroup === 'all'
+    ? TREATMENT_DIRECTORY
+    : TREATMENT_DIRECTORY.filter((item) => item.group === selectedTreatmentGroup);
   const availableProcedures = ['All procedures', ...new Set(
     (selectedTreatmentMeta.type === 'All'
       ? HOSPITALS.flatMap((hospital) => hospital.procedures)
@@ -629,6 +664,7 @@ function App() {
   const selectedHospital = hospitals.find((hospital) => hospital.id === selectedHospitalId)
     ?? HOSPITALS.find((hospital) => hospital.id === selectedHospitalId)
     ?? HOSPITALS[0];
+  const selectedHospitalPackageFrom = getActivePackageFrom(selectedHospital, selectedTreatment);
 
   const selectedBookingCategory = BOOKING_CATEGORIES.find((category) => category.id === selectedBookingCategoryId)
     ?? BOOKING_CATEGORIES[0];
@@ -636,7 +672,7 @@ function App() {
   const stayCost = selectedHospital.cost.stayNight * tripNights;
   const companionCost = withCompanion ? 240 : 0;
   const totalCost =
-    selectedHospital.cost.treatment +
+    selectedHospitalPackageFrom +
     selectedHospital.cost.flight +
     selectedHospital.cost.visa +
     selectedHospital.cost.local +
@@ -983,61 +1019,132 @@ function App() {
                     </div>
                   </section>
 
+                  <section className="module-card treatment-finder-card">
+                    <div className="section-heading">
+                      <h3>Find treatments</h3>
+                      <button
+                        className={selectedTreatmentId === 'all' ? 'mini-chip active' : 'mini-chip'}
+                        onClick={() => {
+                          setSelectedTreatmentId('all');
+                          setSelectedSpecialty('All');
+                          setSelectedTreatmentGroup('all');
+                        }}
+                        type="button"
+                      >
+                        All
+                      </button>
+                    </div>
+                    <div className="treatment-tabs">
+                      {TREATMENT_GROUPS.filter((group) => group.id !== 'all').map((group) => (
+                        <button
+                          className={selectedTreatmentGroup === group.id ? 'treatment-tab active' : 'treatment-tab'}
+                          key={group.id}
+                          onClick={() => {
+                            setSelectedTreatmentGroup(group.id);
+                            setSelectedTreatmentId('all');
+                            setSelectedSpecialty('All');
+                          }}
+                          type="button"
+                        >
+                          {group.label}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="treatment-cost-grid">
+                      {treatmentDirectoryItems.slice(0, 8).map((item) => (
+                        <button
+                          className={selectedTreatmentId === item.id ? 'treatment-cost-card active' : 'treatment-cost-card'}
+                          key={item.id}
+                          onClick={() => {
+                            setSelectedTreatmentId(item.id);
+                            setSelectedTreatmentGroup(item.group);
+                            setSelectedSpecialty(item.specialty);
+                            setSelectedProcedure('All procedures');
+                          }}
+                          type="button"
+                        >
+                          <span className="treatment-icon">{item.icon}</span>
+                          <strong>{item.title}</strong>
+                          <small>{item.valueScore}% rated value for money</small>
+                          <em>Package from {formatCurrency(item.packageFrom)}</em>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="budget-vision-strip">
+                      <strong>{selectedTreatment ? selectedTreatment.title : 'All treatments'}</strong>
+                      <span>Listing estimates include treatment package, flight, visa, local transport, stay, and service charges.</span>
+                    </div>
+                  </section>
+
                   <section className="module-card hospital-listing-card priority-directory-card">
                     <div className="section-heading">
                       <h3>Hospital listings</h3>
+                      <span className="section-total">{hospitals.length} found</span>
                     </div>
                     <div className="list-stack compact-list-stack">
-                      {hospitals.map((hospital) => (
-                        <button
-                          className="list-card featured-hospital-card compact-provider-card"
-                          key={hospital.id}
-                          onClick={() => openHospital(hospital.id, 'hospital')}
-                          type="button"
-                        >
-                          <img alt={hospital.name} className="card-thumb" src={hospital.image} />
-                          <div className="compact-provider-copy">
-                            <div className="hospital-card-topline">
-                              <span className="hospital-chip">{hospital.treatmentType}</span>
-                              <span className="hospital-city">{hospital.city}, {hospital.country}</span>
+                      {hospitals.map((hospital) => {
+                        const packageFrom = getActivePackageFrom(hospital, selectedTreatment);
+                        const estimatedTotal = getEstimatedTotal(hospital, packageFrom);
+                        return (
+                          <button
+                            className="list-card featured-hospital-card compact-provider-card"
+                            key={hospital.id}
+                            onClick={() => openHospital(hospital.id, 'hospital')}
+                            type="button"
+                          >
+                            <img alt={hospital.name} className="card-thumb" src={hospital.image} />
+                            <div className="compact-provider-copy">
+                              <div className="hospital-card-topline">
+                                <span className="hospital-chip">{selectedTreatment?.title ?? hospital.treatmentType}</span>
+                                <span className="hospital-city">{hospital.city}, {hospital.country}</span>
+                              </div>
+                              <strong>{hospital.name}</strong>
+                              <p>{hospital.specialty} - {hospital.valueScore}% value for money</p>
+                              <div className="estimate-line">
+                                <span>Treatment {formatCurrency(packageFrom)}</span>
+                                <span>Travel {formatCurrency(hospital.cost.flight + hospital.cost.visa + hospital.cost.local)}</span>
+                                <span>Stay {formatCurrency(hospital.cost.stayNight * 6)}</span>
+                              </div>
+                              <div className="total-estimate">
+                                <span>Total estimate</span>
+                                <strong>{formatCurrency(estimatedTotal)}</strong>
+                              </div>
                             </div>
-                            <strong>{hospital.name}</strong>
-                            <p>{hospital.specialty} - {hospital.valueScore}% value for money</p>
-                            <div className="provider-metrics">
-                              <span>From {formatCurrency(hospital.packageFrom)}</span>
-                              <span>{hospital.rating} rating</span>
-                              <span>{hospital.surgeons} doctors</span>
-                            </div>
-                          </div>
-                        </button>
-                      ))}
+                          </button>
+                        );
+                      })}
                     </div>
                   </section>
 
                   <section className="module-card priority-directory-card">
                     <div className="section-heading">
                       <h3>Doctor listings</h3>
+                      <span className="section-total">{hospitals.length} found</span>
                     </div>
                     <div className="doctor-list compact-list-stack">
-                      {hospitals.map((hospital) => (
-                        <button
-                          className="doctor-card"
-                          key={hospital.leadSurgeon}
-                          onClick={() => openHospital(hospital.id, 'surgeon')}
-                          type="button"
-                        >
-                          <img alt={hospital.leadSurgeon} src={hospital.surgeonImage} />
-                          <div>
-                            <strong>{hospital.leadSurgeon}</strong>
-                            <p>{hospital.surgeonTitle}</p>
-                            <span>{hospital.doctorExperience} - {hospital.city}</span>
-                            <div className="provider-metrics compact">
-                              <span>{formatCurrency(hospital.doctorFee)} consult</span>
-                              <span>{hospital.languages.slice(0, 2).join(', ')}</span>
+                      {hospitals.map((hospital) => {
+                        const packageFrom = getActivePackageFrom(hospital, selectedTreatment);
+                        return (
+                          <button
+                            className="doctor-card"
+                            key={hospital.leadSurgeon}
+                            onClick={() => openHospital(hospital.id, 'surgeon')}
+                            type="button"
+                          >
+                            <img alt={hospital.leadSurgeon} src={hospital.surgeonImage} />
+                            <div>
+                              <strong>{hospital.leadSurgeon}</strong>
+                              <p>{hospital.surgeonTitle}</p>
+                              <span>{hospital.doctorExperience} - {hospital.city}</span>
+                              <div className="provider-metrics compact">
+                                <span>{formatCurrency(hospital.doctorFee)} consult</span>
+                                <span>{formatCurrency(packageFrom)} package</span>
+                                <span>{hospital.languages.slice(0, 2).join(', ')}</span>
+                              </div>
                             </div>
-                          </div>
-                        </button>
-                      ))}
+                          </button>
+                        );
+                      })}
                     </div>
                   </section>
 
@@ -1651,7 +1758,7 @@ function App() {
 
                   <section className="module-card listing-summary-card">
                     <div className="provider-metrics">
-                      <span>From {formatCurrency(selectedHospital.packageFrom)}</span>
+                      <span>From {formatCurrency(selectedHospitalPackageFrom)}</span>
                       <span>{selectedHospital.valueScore}% value</span>
                       <span>{selectedHospital.availability}</span>
                     </div>
@@ -1690,7 +1797,7 @@ function App() {
                       </div>
                       <div>
                         <span>Package from</span>
-                        <strong>{formatCurrency(selectedHospital.packageFrom)}</strong>
+                        <strong>{formatCurrency(selectedHospitalPackageFrom)}</strong>
                       </div>
                     </div>
                   </section>
@@ -1998,7 +2105,7 @@ function App() {
                       <h3>Cost breakdown</h3>
                     </div>
                     <div className="cost-list">
-                      <div><span>Treatment estimate</span><strong>{formatCurrency(selectedHospital.cost.treatment)}</strong></div>
+                      <div><span>Treatment estimate</span><strong>{formatCurrency(selectedHospitalPackageFrom)}</strong></div>
                       <div><span>Flight charges</span><strong>{formatCurrency(selectedHospital.cost.flight)}</strong></div>
                       <div><span>Visa and documentation</span><strong>{formatCurrency(selectedHospital.cost.visa)}</strong></div>
                       <div><span>Local transport</span><strong>{formatCurrency(selectedHospital.cost.local)}</strong></div>
