@@ -24,7 +24,7 @@ const TREATMENT_IMAGES = {
   orthopedics: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80',
   oncology: 'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?auto=format&fit=crop&w=800&q=80',
   spine: 'https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=800&q=80',
-  urology: 'https://images.unsplash.com/photo-1583912267550-d6c2acb0981b?auto=format&fit=crop&w=800&q=80',
+  urology: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=800&q=80',
   infertility: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=800&q=80',
   hair: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80',
   dental: 'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?auto=format&fit=crop&w=800&q=80',
@@ -255,7 +255,7 @@ HOSPITALS.push(
     rating: '4.7',
     doctors: 17,
     value: 90,
-    image: 'https://images.unsplash.com/photo-1583912267550-d6c2acb0981b?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?auto=format&fit=crop&w=1200&q=80',
     tags: ['Urology', 'General Medicine'],
     doctor: 'Dr. Omar Rahman',
     doctorTitle: 'Urology & Robotic Surgery Consultant',
@@ -585,7 +585,7 @@ function Header({ currency, page, setCurrency, setPage }) {
           </select>
         </label>
         <button className="header-cta" onClick={() => setPage('planner')} type="button">
-          Start planning
+          Get cost estimate
         </button>
       </div>
     </header>
@@ -598,8 +598,8 @@ function Hero({ query, setQuery, selectedCountry, setSelectedCountry, setPage })
       <div className="hero-copy">
         <h1>Discover treatments across borders.</h1>
         <p>
-          Search treatments, hospitals, doctors, and destinations with transparent package,
-          travel, stay, and local support estimates before you make an inquiry.
+          Compare hospitals, doctors, treatment packages, flights, visa, stay, and local support
+          in one transparent medical travel budget before you make an inquiry.
         </p>
         <div className="hero-search">
           <label>
@@ -615,12 +615,16 @@ function Hero({ query, setQuery, selectedCountry, setSelectedCountry, setPage })
               ))}
             </select>
           </label>
-          <button onClick={() => setPage('treatments')} type="button">Select Treatment</button>
+          <button onClick={() => setPage('treatments')} type="button">Find care</button>
         </div>
         <div className="journey-steps">
-          <span>Where</span>
-          <span>What</span>
-          <span>Which</span>
+          <span>1,200+ patient reviews</span>
+          <span>22 hospitals</span>
+          <span>Transparent budget</span>
+        </div>
+        <div className="hero-action-row">
+          <button onClick={() => setPage('planner')} type="button">Quick cost plan</button>
+          <button onClick={() => setPage('doctors')} type="button">View doctors</button>
         </div>
       </div>
       <div className="hero-visual">
@@ -792,9 +796,9 @@ function Hospitals({ hospitals, money, selectedTreatment, setPage, setSelectedHo
   );
 }
 
-function Doctors({ hospitals, money, setPage, setSelectedHospital }) {
+function Doctors({ hospitals, isCarousel = false, money, setPage, setSelectedHospital }) {
   return (
-    <section className="page-section doctors-section" id="doctors">
+    <section className={isCarousel ? 'page-section doctors-section carousel-mode' : 'page-section doctors-section'} id="doctors">
       <div className="section-heading">
         <div>
           <h2>Top Doctors Worldwide</h2>
@@ -1547,9 +1551,14 @@ function JourneyModal({ onClose, setPage }) {
     <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Quick medical journey planner">
       <div className="journey-modal">
         <button className="modal-close" onClick={onClose} type="button">x</button>
-        <span>Still looking?</span>
-        <h2>Are you looking for the right treatment cards?</h2>
-        <p>Quick plan your medical journey with treatment, hospital, doctor, travel, stay, and budget estimates in one flow.</p>
+        <span>Plan smarter</span>
+        <h2>Build a quick medical travel estimate</h2>
+        <p>Select a treatment, compare hospitals and doctors, then see a demo budget for package, flights, visa, stay, pickup and care support.</p>
+        <div className="modal-steps">
+          <span>Choose treatment</span>
+          <span>Compare hospitals</span>
+          <span>Estimate total cost</span>
+        </div>
         <div className="modal-treatment-grid">
           {TREATMENTS.slice(0, 6).map((item) => (
             <button key={item.id} type="button">
@@ -1666,7 +1675,7 @@ function App() {
         {(showHome || page === 'hospitals') && (
           <Hospitals hospitals={shownHospitals} money={money} selectedTreatment={selectedTreatment} setPage={setPage} setSelectedHospital={setSelectedHospital} />
         )}
-        {(showHome || page === 'doctors') && <Doctors hospitals={showHome ? HOSPITALS : shownHospitals} money={money} setPage={setPage} setSelectedHospital={setSelectedHospital} />}
+        {(showHome || page === 'doctors') && <Doctors hospitals={showHome ? HOSPITALS : shownHospitals} isCarousel={showHome} money={money} setPage={setPage} setSelectedHospital={setSelectedHospital} />}
         {page === 'treatment-detail' && (
           <TreatmentDetail
             hospitals={HOSPITALS}
